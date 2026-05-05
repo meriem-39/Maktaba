@@ -16,6 +16,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ElOuedUniv.maktaba.data.model.Book
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +35,22 @@ fun BookListView(
     viewModel: BookViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(uiState.books) { book ->
+            BookCard(
+                book = book,
+                onBookClick = {
+                    onBookClick(book.isbn)
+                }
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -81,6 +106,39 @@ fun BookListView(
 }
 
 @Composable
+fun BookCard(
+    book: Book,
+    onBookClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onBookClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            AsyncImage(
+                model = book.imageURL,
+                contentDescription = book.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
+
+@Composable
 fun BookList(
     books: List<Book>,
     onBookClick: (String) -> Unit,
@@ -109,11 +167,27 @@ fun BookItem(book: Book, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+
+                    Column {
+
+                        // 🖼 الصورة
+                        AsyncImage(
+                            model = "https://picsum.photos/300/400",
+                            contentDescription = book.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        // 📘 العنوان
+                        Text(
+                            text = book.title,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+            }
             
             Spacer(modifier = Modifier.height(8.dp))
             
@@ -132,7 +206,7 @@ fun BookItem(book: Book, onClick: () -> Unit) {
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Pages:",
@@ -146,8 +220,8 @@ fun BookItem(book: Book, onClick: () -> Unit) {
                 }
             }
         }
-    }
-}
+
+
 
 @Composable
 fun EmptyBooksMessage(modifier: Modifier = Modifier) {

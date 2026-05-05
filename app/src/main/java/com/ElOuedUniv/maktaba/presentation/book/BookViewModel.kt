@@ -56,7 +56,9 @@ class BookViewModel @Inject constructor(
                 val newBook = Book(
                     isbn = action.isbn,
                     title = action.title,
-                    nbPages = action.nbPages
+                    nbPages = action.nbPages,
+                    imageURL = action.imageURL,
+                    progress = action.progress,
                 )
                 addBookUseCase(newBook)
                 _uiState.update { it.copy(isAddingBook = false) }

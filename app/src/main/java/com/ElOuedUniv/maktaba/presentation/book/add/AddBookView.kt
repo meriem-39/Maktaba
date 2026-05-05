@@ -1,5 +1,7 @@
 package com.ElOuedUniv.maktaba.presentation.book.add
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -8,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBookView(
@@ -16,6 +17,11 @@ fun AddBookView(
     viewModel: AddBookViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { imageURL ->
+        viewModel.onAction(AddBookUiAction.OnImagePicked(imageURL.toString() ))
+    }
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
@@ -55,6 +61,13 @@ fun AddBookView(
                 value = uiState.nbPages,
                 onValueChange = { viewModel.onAction(AddBookUiAction.OnPagesChange(it)) },
                 label = { Text("Pages") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = uiState.imageURL,
+                onValueChange = { viewModel.onAction(AddBookUiAction.OnPagesChange(it)) },
+                label = { Text("ImageUrl") },
                 modifier = Modifier.fillMaxWidth()
             )
             

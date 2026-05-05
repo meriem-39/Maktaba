@@ -28,6 +28,12 @@ class AddBookViewModel @Inject constructor(
             is AddBookUiAction.OnPagesChange -> {
                 _uiState.update { it.copy(nbPages = action.pages) }
             }
+            is AddBookUiAction.OnImagePicked -> {
+                _uiState.update { it.copy(imageURL = action.imageURL) }
+            }
+            is AddBookUiAction.OnProgressChange -> {
+                _uiState.update { it.copy(progress = action.progress) }
+            }
             AddBookUiAction.OnAddClick -> {
                 addBook()
             }
@@ -39,7 +45,9 @@ class AddBookViewModel @Inject constructor(
         val book = Book(
             isbn = currentState.isbn,
             title = currentState.title,
-            nbPages = currentState.nbPages.toIntOrNull() ?: 0
+            nbPages = currentState.nbPages.toIntOrNull() ?: 0,
+            imageURL = currentState.imageURL,
+            progress = currentState.progress,
         )
         addBookUseCase(book)
         _uiState.update { it.copy(isSuccess = true) }
