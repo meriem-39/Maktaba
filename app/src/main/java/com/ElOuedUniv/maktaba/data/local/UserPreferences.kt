@@ -6,12 +6,12 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by preferencesDataStore(name = "user_prefs")
+private val Context.dataStore by preferencesDataStore(name = "maktaba")
 
 class UserPreferences(private val context: Context) {
 
     companion object {
-        val ONBOARDING_KEY = booleanPreferencesKey("onboarding_completed")
+        val ONBOARDING_KEY = booleanPreferencesKey("sb_publishable_214k3vbtTg02F_M2RI4_IA_7csqD4hc")
     }
 
     // حفظ القيمة
